@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<title>Software Registry</title>
+    </head>
+<body>
+    {% include 'nav.html' %}
+    <div class="container">
+    <h1 class="text-center">Software Register</h1>
+
+    <div class="text-center">
+        <img class="img-fluid" src="/static/floppiesstack.jpg" alt="Image of stacked floppies">
+    </div>
+    
+    <h2>About</h2>
+
+    <div class="row" style="margin-bottom: 16px;">
+        <div class="col-md-6">
+            <p class="bodytext">
+                PM Group Software Asset Registry: Efficient management system for tracking software assets, including request and approval processes for software use. Ensures optimal utilization, compliance, and security while maintaining an organized inventory of licenses and versions.
+            </p>
+        </div>
+    
+        <div class="col-md-6">
+            <img src="/static/autodesk.jpg" style="height:380px;border-radius: 4px;" class="img-responsive">
+        </div>
+    </div>
+    
+    <h2>Search</h2>
+    <div>
+        {% for software in software %}
+            {% include 'software.html' %}
+        {% endfor %}
+    </div>
+
+    <div id="buttoncontainer" style="text-align: center; margin: 20px 0; display: inline-block;">
+        <a href="https://www.myabandonware.com" target="_blank">
+            <button type="button" class="btn btn-primary btn-lg">Request new Software</button>
+        </a>
+    </div>
+    
+
+    </div>
+
+    {% include 'footer.html' %}
+</body>
+</html> 

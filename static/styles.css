@@ -1,0 +1,41 @@
+/* styles.css */
+
+h {
+ font-size: xx-large;
+ font-weight: bold;
+ font-family: Arial, Helvetica, sans-serif;
+ color:rgb(139, 80, 80);
+ text-align: center;
+}
+
+h {
+    font-size: large;
+    font-weight: normal;
+    font-family: Arial, Helvetica, sans-serif;
+    color:rgb(139, 80, 80);
+    text-align: center;
+   }
+
+   .bodytext {
+    
+    font-family: Arial, Helvetica, sans-serif;
+    color:rgb(80, 80, 80);
+   }
+
+#floppy {
+    width: 30%;
+    height: auto;          /* Adjust height to maintain aspect ratio */
+    object-fit: cover;
+    object-position: center;
+    display: block;        /* Ensure image is treated as block element */
+    margin: 0 auto;        /* Center horizontally */
+}
+
+#container {
+    max-width: 720px;
+    margin: 0 auto 0 auto; /* this margin 0 on top auto on left and right 0 bottom */
+}
+
+#buttoncontainer {
+    text-align: center;
+}
