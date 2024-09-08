@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request New Software</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Request New Software</h1>
+
+        <form action="mailto:request@pm.com" method="post" enctype="text/plain">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="requesterName">Requester Name</label>
+                    <input type="text" class="form-control" id="requesterName" name="requesterName" placeholder="Your Name" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="applicationName">Application Name</label>
+                    <input type="text" class="form-control" id="applicationName" name="applicationName" placeholder="Software Name" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="text" class="form-control" id="price" name="price" placeholder="Input license price" required>
+            </div>
+            <div class="form-group">
+                <label for="comment">Comment</label>
+                <textarea class="form-control" id="comment" name="comment" rows="4" maxlength="255" placeholder="Enter any additional comment here..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Request</button>
+        </form>
+        
+        <!-- Return to Main Page Button -->
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-secondary">Return to Main Page</a>
+        </div>
+    </div>
+</body>
+</html>
