@@ -7,9 +7,7 @@ connection_string = "mysql+pymysql://sql7730122:idnTnhBtif@sql7.freesqldatabase.
 # Create the SQLAlchemy engine
 engine = create_engine(connection_string)
 
-# Connect to the database and execute a query
-
-def fetch_software_data():
+def fetch_all_software_data():
     try:
         with engine.connect() as connection:
             # Define and execute the query
@@ -25,6 +23,24 @@ def fetch_software_data():
         print(f"An error occurred: {e}")
         return []
 
+def fetch_software_data_by_id(id):
+    try:
+        with engine.connect() as connection:
+            # Define and execute the query with parameter binding
+            query = text("SELECT * FROM software WHERE id = :val")
+            result = connection.execute(query, {"val": id}).mappings()  # Use parameter binding correctly
+
+            # Convert result to a list of dictionaries
+            rows = [dict(row) for row in result]
+            return rows
+        
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
+
 # Example usage
-software_data = fetch_software_data()
-print(software_data)
+all_software_data = fetch_all_software_data()
+print("All software data:", all_software_data)
+
+software_data = fetch_software_data_by_id(1)  # Replace 1 with the desired ID
+print("Software data by ID:", software_data)

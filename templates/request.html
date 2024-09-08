@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Request New Software</title>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    {% include 'nav.html' %}
     <div class="container">
         <h1 class="text-center">Request New Software</h1>
 
@@ -32,11 +34,6 @@
             </div>
             <button type="submit" class="btn btn-primary">Submit Request</button>
         </form>
-        
-        <!-- Return to Main Page Button -->
-        <div class="text-center mt-4">
-            <a href="/" class="btn btn-secondary">Return to Main Page</a>
-        </div>
     </div>
 </body>
 </html>

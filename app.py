@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify
 from database import engine
 from sqlalchemy import text
+from database import fetch_software_data_by_id
 
 app = Flask(__name__)
 
@@ -21,6 +22,15 @@ def hello_world():
 @app.route("/request")
 def request_page():
     return render_template('request.html')
+
+@app.route("/application/<id>")
+def show_appinfo(id):
+     appinfo = fetch_software_data_by_id(id)
+
+     if not appinfo:
+          return "Not Found", 404
+     
+     return render_template('application.html', appinfo=appinfo[0])
 
 print(__name__)
 if __name__ == "__main__":
