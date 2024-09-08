@@ -1,47 +1,26 @@
 from flask import Flask, render_template, jsonify
+from database import engine
+from sqlalchemy import text
 
 app = Flask(__name__)
 
-SOFTWARE = [
-{
-        'id': 1,
-        'title': 'Autocad 2024',
-        'licensing': 'Very expensive',
-        'approved': 'CAD teams'
-    },
-    {
-        'id': 2,
-        'title': 'Adobe Photoshop CC',
-        'licensing': 'Subscription-based',
-        'approved': 'Design teams'
-    },
-    {
-        'id': 3,
-        'title': 'Microsoft Office 2021',
-        'licensing': 'One-time purchase',
-        'approved': 'All departments'
-    },
-    {
-        'id': 4,
-        'title': 'Slack',
-        'licensing': 'Freemium with paid options',
-        'approved': 'Communications'
-    },
-    {
-        'id': 5,
-        'title': 'VMware Workstation Pro',
-        'licensing': 'Perpetual license',
-        'approved': 'IT department'
-    }
-]
+def load_software_from_db():
+    with engine.connect() as connection:
+            # Define and execute the query
+            query = text("SELECT * FROM software;")
+            result = connection.execute(query).mappings()  # Use .mappings() to return as dictionaries
+            rows = [dict(row) for row in result]  # Each row is already a dictionary-like object
+            return rows
+
 
 @app.route("/")
 def hello_world():
-    return render_template('index.html', software=SOFTWARE)
+    software = load_software_from_db()
+    return render_template('index.html', software=software)
 
-@app.route("/info")
-def list_software():
-    return jsonify(SOFTWARE)
+@app.route("/request")
+def request_page():
+    return render_template('request.html')
 
 print(__name__)
 if __name__ == "__main__":
