@@ -5,19 +5,43 @@ from database import fetch_software_data_by_id
 
 app = Flask(__name__)
 
-def load_software_from_db():
+def load_software_from_db(filter_status=None):
     with engine.connect() as connection:
-            # Define and execute the query
+        if filter_status == 'approved':
+            query = text("SELECT * FROM software WHERE Approved = 'Yes';")
+        elif filter_status == 'not_approved':
+            query = text("SELECT * FROM software WHERE Approved = 'No';")
+        else:
             query = text("SELECT * FROM software;")
-            result = connection.execute(query).mappings()  # Use .mappings() to return as dictionaries
-            rows = [dict(row) for row in result]  # Each row is already a dictionary-like object
-            return rows
+        
+        result = connection.execute(query).mappings()
+        rows = [dict(row) for row in result]
+        return rows
+
 
 
 @app.route("/")
-def hello_world():
+def index():
     software = load_software_from_db()
-    return render_template('index.html', software=software)
+    recent_software = sorted(software, key=lambda x: x['id'], reverse=True)[:5]
+    
+    return render_template('index.html', software_list=recent_software)
+
+@app.route("/search")
+def search():
+    query = request.args.get('query', '')
+    software_list = []
+    if query:
+        all_software = load_software_from_db()
+        software_list = [s for s in all_software if query.lower() in s['Software_Name'].lower()]
+    return render_template('searchresults.html', software_list=software_list, query=query)
+
+@app.route("/allsoftware")
+def all_software():
+    filter_status = request.args.get('filter', None)  # Get filter parameter
+    software_list = load_software_from_db(filter_status)
+    return render_template('allsoftware.html', software_list=software_list)
+
 
 @app.route("/request")
 def request_page():
@@ -26,10 +50,6 @@ def request_page():
 @app.route("/admin")
 def admin_page():
     return render_template('admin.html')
-
-@app.route("/submit")
-def submit_page():
-    return render_template('submit.html')
 
 @app.route("/application/<id>")
 def show_appinfo(id):
@@ -63,6 +83,7 @@ def submit_form():
                 "approved": approved,
                 "comments": comments
             })
+            connection.commit()  # Explicit commit
         
         return render_template('submit.html', message="Submission successful!")
     
