@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rejected Apps</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
+</head>
+<body>
+    {% include 'nav.html' %}
+ 
+    <div class="container">
+        <h1>Rejected app requests</h1>
+
+               <!-- Display flash messages -->
+               {% with messages = get_flashed_messages(with_categories=true) %}
+               {% if messages %}
+                   {% for category, message in messages %}
+                       <div class="alert alert-{{ category }}">
+                           {{ message }}
+                       </div>
+                   {% endfor %}
+               {% endif %}
+           {% endwith %}
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Application</th>
+                    <th>Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rejected in rejected %}
+                <tr>
+                    <td>{{ rejected.application }}</td>
+                    <td>{{ rejected.comments }}</td>
+                    <td>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% include 'footer.html' %}
+
+</body>
+</html>

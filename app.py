@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
 from database import engine
 from sqlalchemy import text
-from database import fetch_software_data_by_id, fetch_all_requests, move_to_notapproved, fetch_request_by_id, insert_software
+from database import fetch_software_data_by_id, fetch_all_requests, move_to_notapproved, fetch_request_by_id, insert_software, fetch_all_notapproved
 
 app = Flask(__name__)
 app.secret_key = 'KAjgZ8y73u'
@@ -23,6 +23,11 @@ def index():
     software = load_software_from_db()
     recent_software = sorted(software, key=lambda x: x['id'], reverse=True)[:5]
     return render_template('index.html', software_list=recent_software)
+
+@app.route("/adminrejected")
+def adminrejected():
+    rejected = fetch_all_notapproved()
+    return render_template ('adminrejected.html', rejected=rejected)
 
 @app.route("/search")
 def search():
@@ -182,9 +187,11 @@ def disapprove_request(id):
     reason = request.form['reason']
     try:
         move_to_notapproved(id, reason)
+        flash('Request has been rejected successfully!', 'success')
         return redirect(url_for('adminrequests'))
     except Exception as e:
         print(f"An error occurred: {e}")
+        flash('An error occurred while processing the request.', 'danger')
         return "An error occurred while processing the request.", 500
 
 

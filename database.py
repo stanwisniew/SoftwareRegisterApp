@@ -99,7 +99,7 @@ def move_to_notapproved(request_id, reason):
                 request_data = request_data[0]
                 # Insert into notapproved
                 insert_query = text("""
-                    INSERT INTO notapproved (application, comment)
+                    INSERT INTO notapproved (application, comments)
                     VALUES (:application, :comment)
                 """)
                 connection.execute(insert_query, {
@@ -112,3 +112,15 @@ def move_to_notapproved(request_id, reason):
                 connection.commit()
     except Exception as e:
         print(f"An error occurred: {e}")
+
+def fetch_all_notapproved():
+    try:
+        with engine.connect() as connection:
+            query = text("SELECT * FROM notapproved;")
+            result = connection.execute(query).mappings()
+            connection.commit()
+            rows = [dict(row) for row in result]
+            return rows
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return [] 

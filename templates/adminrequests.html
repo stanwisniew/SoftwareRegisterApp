@@ -50,13 +50,25 @@
                     <td><a href="https://{{ request.link }}" target="_blank">{{ request.link }}</a></td>
                     <td>{{ request.comments }}</td>
                     <td>
-                        <!-- Approve and Disapprove Actions -->
-                        <form action="{{ url_for('approve_request', id=request.id) }}" method="POST" style="display:inline;">
-                            <button type="submit" class="btn btn-success">Approve</button>
-                        </form>
-                        <form action="{{ url_for('disapprove_request', id=request.id) }}" method="POST" style="display:inline;">
-                            <button type="submit" class="btn btn-danger">Disapprove</button>
-                        </form>
+<!-- Approve and Disapprove Actions -->
+<div class="row">
+    <!-- Approve Button -->
+    <div class="col-md-6">
+        <form action="{{ url_for('approve_request', id=request.id) }}" method="POST" style="display:inline;">
+            <button type="submit" class="btn btn-success btn-block">Approve</button>
+        </form>
+    </div>
+
+    <!-- Disapprove Reason and Button -->
+    <div class="col-md-6">
+        <form action="{{ url_for('disapprove_request', id=request.id) }}" method="POST" style="display:inline;">
+            <div class="input-group" style="width: 100%;"> <!-- Ensure full width for input group -->
+                <input type="text" class="form-control" name="reason" placeholder="Reason for disapproval" required>
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-danger">Disapprove</button>
+                </span>
+            </div>
+        </form>
                     </td>
                 </tr>
                 {% endfor %}
