@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for
 from database import engine
 from sqlalchemy import text
 from database import fetch_software_data_by_id
@@ -18,13 +18,10 @@ def load_software_from_db(filter_status=None):
         rows = [dict(row) for row in result]
         return rows
 
-
-
 @app.route("/")
 def index():
     software = load_software_from_db()
     recent_software = sorted(software, key=lambda x: x['id'], reverse=True)[:5]
-    
     return render_template('index.html', software_list=recent_software)
 
 @app.route("/search")
@@ -42,6 +39,9 @@ def all_software():
     software_list = load_software_from_db(filter_status)
     return render_template('allsoftware.html', software_list=software_list)
 
+@app.route("/userrequests")
+def userreq_page():
+    return render_template('userrequests.html')
 
 @app.route("/request")
 def request_page():
@@ -53,13 +53,12 @@ def admin_page():
 
 @app.route("/application/<id>")
 def show_appinfo(id):
-     appinfo = fetch_software_data_by_id(id)
+    appinfo = fetch_software_data_by_id(id)
+    if not appinfo:
+        return "Not Found", 404
+    return render_template('application.html', appinfo=appinfo[0])
 
-     if not appinfo:
-          return "Not Found", 404
-     
-     return render_template('application.html', appinfo=appinfo[0])
-
+# Route for submitting software request
 @app.route("/submit", methods=["POST"])
 def submit_form():
     # Get form data
@@ -69,7 +68,7 @@ def submit_form():
     comments = request.form.get('comments')
     approved = 'Yes' if request.form.get('approved') else 'No'  # Set to 'Yes' if checkbox is checked, otherwise 'No'
 
-   # Insert data into database
+    # Insert data into database
     try:
         with engine.connect() as connection:
             query = text("""
@@ -89,9 +88,47 @@ def submit_form():
     
     except Exception as e:
         print(f"An error occurred: {e}")
-        return render_template('submit_page', message="An error occurred during submission.")
+        return render_template('submit.html', message="An error occurred during submission.")
 
+# Combined GET and POST route for user request
+@app.route('/submit-request', methods=['GET', 'POST'])
+def submit_request():
+    if request.method == 'POST':
+        username = request.form['username']
+        application = request.form['application']
+        price = request.form['price']
+        license_type = request.form['license_type']
+        approved_by_manager = request.form['approved_by_manager']
+        link = request.form['link']
+        comments = request.form['comments']
 
-print(__name__)
+        # Insert data into the request table
+        try:
+            with engine.connect() as connection:
+                query = text("""
+                    INSERT INTO requests (username, application, price, license_type, approved_by_manager, link, comments)
+                    VALUES (:username, :application, :price, :license_type, :approved_by_manager, :link, :comments)
+                """)
+                connection.execute(query, {
+                    "username": username,
+                    "application": application,
+                    "price": float(price),
+                    "license_type": license_type,
+                    "approved_by_manager": approved_by_manager,  # 'yes' or 'no'
+                    "link": link,
+                    "comments": comments
+                })
+                connection.commit()  # Explicit commit
+
+            # Render a success message
+            return render_template('submit-request.html', message="Submission successful!")
+        
+        except Exception as e:
+            # Handle any database errors here
+            return render_template('submit-request.html', message=f"An error occurred: {str(e)}")
+
+    # GET request to show the form
+    return render_template('submit-request.html')
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Software</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <style>
+        .software-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        .filter-section {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    {% include 'nav.html' %}
+
+
+    <div class="container mt-5">
+        <div class="row filter-section">
+            <div class="col-md-12 text-center">
+                <form action="/allsoftware" method="GET" id="filter-form">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="filter" value="approved" {{ 'checked' if 'approved' in request.args.getlist('filter') }}> Approved Only
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="filter" value="not_approved" {{ 'checked' if 'not_approved' in request.args.getlist('filter') }}> Not Approved Only
+                    </label>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            {% if software_list %}
+                {% for software in software_list %}
+                    <div class="col-md-4">
+                        <div class="software-item">
+                            <h4 style="font-weight: bold; color: darkgray;">{{ software['Software_Name'] }}</h4>
+                            <p><b>License Type:</b> {{ software['License_Type'] }}</p>
+                            <p><b>Approval:</b> {{ software['Approved'] }}</p>
+                            <a href="/application/{{ software['id'] }}" class="btn btn-outline-info">More Info</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No software found.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('input[name="filter"]').change(function() {
+                if ($(this).val() === 'approved') {
+                    $('input[name="filter"][value="not_approved"]').prop('checked', false);
+                } else if ($(this).val() === 'not_approved') {
+                    $('input[name="filter"][value="approved"]').prop('checked', false);
+                }
+                $('#filter-form').submit();
+            });
+        });
+    </script>
+    {% include 'footer.html' %}
+</body>
+</html>

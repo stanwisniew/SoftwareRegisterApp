@@ -11,31 +11,65 @@
 <body>
     {% include 'nav.html' %}
     {% include 'banner.html' %}
+    
     <div class="container">
-        <h1 class="text-center">Request New Software</h1>
+        <h1>Submit a Request</h1>
+        <form action="/submit-request" method="POST">
+            <!-- Username input -->
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" class="form-control" required>
+            </div>
 
-        <form action="mailto:request@pm.com" method="post" enctype="text/plain">
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="requesterName">Requester Name</label>
-                    <input type="text" class="form-control" id="requesterName" name="requesterName" placeholder="Your Name" required>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="applicationName">Application Name</label>
-                    <input type="text" class="form-control" id="applicationName" name="applicationName" placeholder="Software Name" required>
-                </div>
-            </div>
+            <!-- Application input -->
             <div class="form-group">
-                <label for="price">Price</label>
-                <input type="text" class="form-control" id="price" name="price" placeholder="Input license price" required>
+                <label for="application">Application:</label>
+                <input type="text" id="application" name="application" class="form-control" required>
             </div>
+
+            <!-- Price input (numbers only) -->
             <div class="form-group">
-                <label for="comment">Comment</label>
-                <textarea class="form-control" id="comment" name="comment" rows="4" maxlength="255" placeholder="Enter any additional comment here..." required></textarea>
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" class="form-control" step="0.01" min="0" required>
             </div>
+
+            <!-- License Type dropdown -->
+            <div class="form-group">
+                <label for="license_type">License Type:</label>
+                <select id="license_type" name="license_type" class="form-control" required>
+                    <option value="Subscription">Subscription</option>
+                    <option value="Perpetual">Perpetual</option>
+                    <option value="Trial">Trial</option>
+                    <option value="Open Source">Open Source</option>
+                </select>
+            </div>
+
+            <!-- Approved by Manager dropdown (Yes/No) -->
+            <div class="form-group">
+                <label for="approved_by_manager">Approved by Manager:</label>
+                <select id="approved_by_manager" name="approved_by_manager" class="form-control" required>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+
+            <!-- Link input (www. only) -->
+            <div class="form-group">
+                <label for="link">Link:</label>
+                <input type="text" id="link" name="link" class="form-control" pattern="www\..*" placeholder="www.example.com" title="Please start with www." required>
+            </div>
+
+            <!-- Comments textarea -->
+            <div class="form-group">
+                <label for="comments">Comments:</label>
+                <textarea id="comments" name="comments" class="form-control"></textarea>
+            </div>
+
+            <!-- Submit button -->
             <button type="submit" class="btn btn-primary">Submit Request</button>
         </form>
     </div>
+
     {% include 'footer.html' %}
 </body>
 </html>
