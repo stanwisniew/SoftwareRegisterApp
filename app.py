@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
 from database import engine
 from sqlalchemy import text
-from database import fetch_software_data_by_id
+from database import fetch_software_data_by_id, fetch_all_requests, move_to_notapproved, fetch_request_by_id, insert_software
 
 app = Flask(__name__)
-
+app.secret_key = 'KAjgZ8y73u'
 def load_software_from_db(filter_status=None):
     with engine.connect() as connection:
         if filter_status == 'approved':
@@ -39,9 +39,9 @@ def all_software():
     software_list = load_software_from_db(filter_status)
     return render_template('allsoftware.html', software_list=software_list)
 
-@app.route("/userrequests")
+@app.route("/adminrequests")
 def userreq_page():
-    return render_template('userrequests.html')
+    return render_template('adminrequests.html')
 
 @app.route("/request")
 def request_page():
@@ -129,6 +129,64 @@ def submit_request():
 
     # GET request to show the form
     return render_template('submit-request.html')
+
+
+#this is to get requests table data for user requests 
+
+@app.route('/admin/requests')
+def adminrequests():
+    try:
+        with engine.connect() as connection:
+            query = text("SELECT * FROM requests;")
+            result = connection.execute(query).mappings()
+            requests = [dict(row) for row in result]
+            print("Requests data type:", type(requests))  # Debug statement
+            print("Requests data:", requests)  # Debug statement
+        return render_template('adminrequests.html', requests=requests)
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return "An error occurred while fetching requests.", 500
+
+
+
+
+@app.route('/approve_request/<int:id>', methods=['POST'])
+def approve_request(id):
+    try:
+        # You need to fetch request details first
+        request = fetch_request_by_id(id)
+        if request:
+            request = request[0]
+            # Move the request to the software table
+            insert_software(
+                software_name=request['application'],
+                license_type=request['license_type'],
+                price=request['price'],
+                approved='Yes',
+                comments=request['comments']
+            )
+            # Delete from requests
+            with engine.connect() as connection:
+                delete_query = text("DELETE FROM requests WHERE id = :id")
+                connection.execute(delete_query, {"id": id})
+                connection.commit()
+        flash('Request has been approved successfully!', 'success')
+        return redirect(url_for('adminrequests'))
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        flash('An error occurred while processing the request.', 'danger')
+        return "An error occurred while processing the request.", 500
+
+@app.route('/disapprove_request/<int:id>', methods=['POST'])
+def disapprove_request(id):
+    reason = request.form['reason']
+    try:
+        move_to_notapproved(id, reason)
+        return redirect(url_for('adminrequests'))
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return "An error occurred while processing the request.", 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)

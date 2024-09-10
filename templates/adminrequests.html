@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Requests</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
+</head>
+<body>
+    {% include 'nav.html' %}
+ 
+    <div class="container">
+        <h1>Admin Requests</h1>
+
+               <!-- Display flash messages -->
+               {% with messages = get_flashed_messages(with_categories=true) %}
+               {% if messages %}
+                   {% for category, message in messages %}
+                       <div class="alert alert-{{ category }}">
+                           {{ message }}
+                       </div>
+                   {% endfor %}
+               {% endif %}
+           {% endwith %}
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Application</th>
+                    <th>Price</th>
+                    <th>License Type</th>
+                    <th>Approved by Manager</th>
+                    <th>Link</th>
+                    <th>Comments</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in requests %}
+                <tr>
+                    <td>{{ request.id }}</td>
+                    <td>{{ request.username }}</td>
+                    <td>{{ request.application }}</td>
+                    <td>{{ request.price }}</td>
+                    <td>{{ request.license_type }}</td>
+                    <td>{{ request.approved_by_manager }}</td>
+                    <td><a href="https://{{ request.link }}" target="_blank">{{ request.link }}</a></td>
+                    <td>{{ request.comments }}</td>
+                    <td>
+                        <!-- Approve and Disapprove Actions -->
+                        <form action="{{ url_for('approve_request', id=request.id) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-success">Approve</button>
+                        </form>
+                        <form action="{{ url_for('disapprove_request', id=request.id) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Disapprove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% include 'footer.html' %}
+
+</body>
+</html>
