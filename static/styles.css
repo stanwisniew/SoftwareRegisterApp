@@ -39,3 +39,26 @@ h {
 #buttoncontainer {
     text-align: center;
 }
+
+
+.bg-success {
+background-color: #16154d !important; /* Use your custom color here */
+}
+
+#this modifies popoover colors
+
+.popover {
+    background-color: #003366; /* Dark blue background */
+    color: #ffffff; /* White text color */
+    border: 1px solid #003366; /* Dark blue border */
+}
+
+.popover .popover-title {
+    background-color: #002244; /* Even darker blue for the title */
+    color: #ffffff; /* White text color */
+}
+
+.popover .popover-content {
+    color: #ffffff; /* Ensure content text color is white */
+    background-color: #1e5200; /* Even darker blue for the title */
+}

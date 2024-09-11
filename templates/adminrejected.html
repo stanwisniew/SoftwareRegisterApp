@@ -28,7 +28,8 @@
             <thead>
                 <tr>
                     <th>Application</th>
-                    <th>Comments</th>
+                    <th>Reason</th>
+                    <th>Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,8 +37,7 @@
                 <tr>
                     <td>{{ rejected.application }}</td>
                     <td>{{ rejected.comments }}</td>
-                    <td>
-                    </td>
+                    <td>{{ rejected.updated_at }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

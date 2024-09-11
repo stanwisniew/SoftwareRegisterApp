@@ -6,7 +6,15 @@
             <div><b>Approval:</b> {{ software['Approved'] }}</div>
         </div>
         <div class="col-md-3 d-flex align-items-center justify-content-end">
-            <a href="/application/{{ software['id'] }}" class="btn btn-outline-info">More Info</a>
+            <!-- Popover Button -->
+            <button type="button" class="btn btn-outline-info" 
+                    data-toggle="popover" 
+                    title="{{ software['Software_Name'] }}" 
+                    data-html="true" 
+                    data-content='<b>Comment:</b> {{ software["Comments"] }}</a>'>
+                More Info
+
+            </button>
         </div>
     </div>
 {% endfor %}
