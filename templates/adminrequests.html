@@ -13,18 +13,18 @@
     <div class="container">
         <h1>Admin Requests</h1>
 
-               <!-- Display flash messages -->
-               {% with messages = get_flashed_messages(with_categories=true) %}
-               {% if messages %}
-                   {% for category, message in messages %}
-                       <div class="alert alert-{{ category }}">
-                           {{ message }}
-                       </div>
-                   {% endfor %}
-               {% endif %}
-           {% endwith %}
+        <!-- Display flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
 
-        <table class="table table-bordered">
+        <table class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -35,7 +35,7 @@
                     <th>Approved by Manager</th>
                     <th>Link</th>
                     <th>Comments</th>
-                    <th>Actions</th>
+                    <th style="width: 50%;">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -50,25 +50,24 @@
                     <td><a href="https://{{ request.link }}" target="_blank">{{ request.link }}</a></td>
                     <td>{{ request.comments }}</td>
                     <td>
-<!-- Approve and Disapprove Actions -->
-<div class="row">
-    <!-- Approve Button -->
-    <div class="col-md-6">
-        <form action="{{ url_for('approve_request', id=request.id) }}" method="POST" style="display:inline;">
-            <button type="submit" class="btn btn-success btn-block">Approve</button>
-        </form>
+                        <div class="form-group">
+ <!-- Approve Button -->
+ <form action="{{ url_for('approve_request', id=request.id) }}" method="POST" style="margin-bottom: 10px;">
+    <button type="submit" class="btn btn-success btn-block">Approve</button>
+</form>
+<!-- Disapprove Button and Reason Input -->
+<form action="{{ url_for('disapprove_request', id=request.id) }}" method="POST">
+    <button type="submit" class="btn btn-danger btn-block">Disapprove</button>
+    <div class="form-group mt-2">
+        <input type="text" class="form-control" name="reason" placeholder="Reason for disapproval" required>
+        <!-- Hidden input to include application name -->
+        <input type="hidden" name="application" value="{{ request.application }}">
+    
     </div>
-
-    <!-- Disapprove Reason and Button -->
-    <div class="col-md-6">
-        <form action="{{ url_for('disapprove_request', id=request.id) }}" method="POST" style="display:inline;">
-            <div class="input-group" style="width: 100%;"> <!-- Ensure full width for input group -->
-                <input type="text" class="form-control" name="reason" placeholder="Reason for disapproval" required>
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-danger">Disapprove</button>
-                </span>
-            </div>
-        </form>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}
@@ -77,6 +76,5 @@
     </div>
 
     {% include 'footer.html' %}
-
 </body>
 </html>
